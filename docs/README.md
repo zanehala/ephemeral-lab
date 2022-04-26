@@ -1,0 +1,1 @@
+This is just a compilation of things I think I'll probably forget at some point so I figured I better write them down.
