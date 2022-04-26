@@ -1,7 +1,8 @@
 # ephemeral-lab
 
 The goal of this repo is to stand up k8s clusters (or really anything) in the most automated way
-possible. At the moment the bulk of this is being done with the following tools:
+possible so I can quickly test ideas or tools and then tear it down when I'm done. 
+At the moment the bulk of this is being done with the following tools:
 
 * [proxmox](https://www.proxmox.com/) - Hypervisor where VM's are created
 * [terraform](https://www.terraform.io/) - Manage the creation of VM's in proxmox via code
