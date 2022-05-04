@@ -1,5 +1,21 @@
-Little proof of concept to see if this work.
+Deploy a basic k3s cluster.
 
 This should
-* Deploy a VM of a Rocky linux template.
-* Connect with Ansible and make a `ansible-test.txt` file in `/tmp`.
+* Deploy 3 VM's based off a previously created Rocky linux template.
+* Connect with Ansible and deploy/configure a basic k3s cluster test bed.
+
+To run:
+
+```console
+$ terraform init
+```
+
+```console
+$ terraform apply
+```
+
+Wait 30s to a minute for the VM's to start up
+
+```console
+$ ansible-playbook --inventory inventories/lab.yaml test-ansible.yaml
+```

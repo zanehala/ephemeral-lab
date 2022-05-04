@@ -15,7 +15,8 @@ provider "proxmox" {
 }
 
 resource "proxmox_vm_qemu" "tf-test-vm" {
-  name = "tf-test-vm-1"
+  count = 3
+  name = "tf-test-vm-${count.index}"
   target_node = "pve"
   clone = "rocky-cloud-init"
 
@@ -40,6 +41,6 @@ resource "proxmox_vm_qemu" "tf-test-vm" {
     bridge = "vmbr0"
   }
 
-  ipconfig0 = "ip=10.0.1.52/24,gw=10.0.1.1"
+  ipconfig0 = "ip=10.0.1.8${count.index}/24,gw=10.0.1.1"
 
 }

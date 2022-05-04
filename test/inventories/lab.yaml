@@ -2,4 +2,6 @@ vm:
   children:
     masters:
       hosts:
-        vm0: {ansible_host: 10.0.1.52}
+        vm0: {ansible_host: 10.0.1.80}
+        vm1: {ansible_host: 10.0.1.81}
+        vm2: {ansible_host: 10.0.1.82}

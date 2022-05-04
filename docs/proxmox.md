@@ -20,3 +20,9 @@ just edit and immediately save it and it should add it.
 * Add an SSH key and set the IP configs.
 * Boot the machine and do `yum update` and `yum install qemu-guest-agent` if the image doesn't have it already.
 * Make it a template.
+
+
+# Creating an API key for Terraform
+
+* Datacenter > Permissions > API Tokens
+* Add to a user, privilege separation off (Set relevant permissions on user)
