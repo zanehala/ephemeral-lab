@@ -1,0 +1,5 @@
+- name: Create base cluster
+  hosts: vm
+  remote_user: rocky
+  roles:
+    - base_cluster

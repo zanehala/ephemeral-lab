@@ -1,8 +1,9 @@
-Deploy a basic k3s cluster.
+Deploy a basic k3s cluster, with a virtual IP for a HA control plane using [kube-virt.](https://github.com/kube-vip/kube-vip)
 
 This should
 * Deploy 3 VM's based off a previously created Rocky linux template.
 * Connect with Ansible and deploy/configure a basic k3s cluster test bed.
+* Return a `kubeconfig.yaml`
 
 To run:
 

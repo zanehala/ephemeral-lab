@@ -7,6 +7,7 @@
   run_once: true
   register: k3s_binary
 
+# If any nodes hostname's collide the kubelet fails to start
 - name: Set hostnames
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
@@ -37,7 +38,7 @@
     path: "{{ k3s_token_file }}"
   register: k3s_token_file_stat
 
-- name: Generate k3s token file on the first node if not exist yet
+- name: Generate k3s token file on the first node if it does not exist yet
   run_once: true
   when: not k3s_token_file_stat.stat.exists
   copy:
@@ -53,7 +54,7 @@
   register: k3s_token_base64
   become: yes
 
-- name: Ensure all nodes has the same token
+- name: Ensure all nodes have the same token
   copy:
     content: "{{ k3s_token_base64.content | b64decode }}"
     dest: "{{ k3s_token_file }}"
@@ -82,17 +83,37 @@
   retries: 5
   become: yes
 
-- name: Get Kubernetes config file
+- name: Get kubeconfig
   run_once: true
   slurp:
     src: /etc/rancher/k3s/k3s.yaml
   register: kubeconfig_base64
   become: yes
 
-- name: Write Kubernetes config file with the correct cluster address
+- name: Write kubeconfig file with the one master node IP
   copy:
     content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', hostvars[groups['masters'][0]].ansible_host) }}"
     dest: "{{ playbook_dir }}/kubeconfig.yaml"
     mode: 0600
+  delegate_to: localhost
+  run_once: true
+
+- name: Render kube-vip template
+  template:
+    src: kube-vip.yaml.j2
+    dest: "{{ role_path }}/files/bin/kube-vip.yaml"
+  delegate_to: localhost
+
+# This assumes kubectl is already installed on the ansible host
+- name: Deploy kube-vip
+  ansible.builtin.command: kubectl apply -f "{{ role_path }}/files/bin/kube-vip.yaml" --kubeconfig=kubeconfig.yaml
+  delegate_to: localhost
+  run_once: true
+
+- name: Rewrite kubeconfig file with the new virtual IP after kube-vip starts
+  ansible.builtin.replace:
+    path: "{{ playbook_dir }}/kubeconfig.yaml"
+    regexp: "{{ hostvars[groups['masters'][0]].ansible_host }}"
+    replace: "{{ virtual_ip }}"
   delegate_to: localhost
   run_once: true
